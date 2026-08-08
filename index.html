@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecosistema de Aprendizaje: Economía para Ingenieros ULA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #2563eb 100%);
+        }
+
+        .eval-btn {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .timeline-connector {
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #e2e8f0;
+            z-index: 0;
+        }
+
+        .node-pulse {
+            box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+    </style>
+</head>
+<body class="antialiased">
+
+<!-- 
+    PALETA SELECCIONADA: "Energetic & Playful" (Deep Navy, Electric Blue, Amber, Emerald)
+    PLAN NARRATIVO:
+    1. Competencias: División binaria entre Genéricas ULA y Específicas de Eléctrica.
+    2. Dimensiones de Relación: Análisis Intra, Inter y Transdisciplinario (Reemplaza Misiones).
+    3. Ruta Interactiva: 7 etapas con explorador de evaluación dinámica (D, F, S).
+    4. Analítica: Balance evaluativo y radar de articulación curricular.
+    
+    CONFIRMACIÓN: NO SE UTILIZÓ SVG NI MERMAID JS. TODO ES HTML/CSS/CANVAS.
+-->
+
+    <header class="gradient-bg text-white py-20 px-6 relative overflow-hidden">
+        <div class="max-w-6xl mx-auto relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-12">
+                <div class="text-center md:text-left">
+                    <span class="bg-amber-500 text-slate-900 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4 inline-block">PAD ULA V B2026</span>
+                    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">Economía para Ingenieros</h1>
+                    <p class="text-xl md:text-2xl font-light opacity-80">Escuela de Ingeniería Eléctrica • Universidad de Los Andes</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 max-w-sm">
+                    <p class="text-sm leading-relaxed font-medium italic">
+                        "El ingeniero de la ULA no solo calcula, sino que gestiona. Esta unidad curricular moviliza un conjunto equilibrado de habilidades genéricas y específicas diseñadas para resolver problemas reales del sector energético nacional"
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 -mt-10 relative z-20 pb-20">
+        
+        <!-- SECCIÓN 1: COMPETENCIAS REORGANIZADAS -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+            <div class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="h-12 w-12 bg-blue-100 rounded-2xl flex items-center justify-center text-2xl">🎓</div>
+                    <h2 class="text-2xl font-bold text-slate-800">Competencias Genéricas <span class="text-blue-600 block text-sm font-semibold uppercase tracking-wider">Perfil ULA</span></h2>
+                </div>
+                <ul class="space-y-3">
+                    <li class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl text-sm font-medium">
+                        <span class="h-2 w-2 bg-blue-500 rounded-full"></span> Resolución de problemas complejos
+                    </li>
+                    <li class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl text-sm font-medium">
+                        <span class="h-2 w-2 bg-blue-500 rounded-full"></span> Comunicación eficaz (Oral y Escrita)
+                    </li>
+                    <li class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl text-sm font-medium">
+                        <span class="h-2 w-2 bg-blue-500 rounded-full"></span> Ética y compromiso social
+                    </li>
+                    <li class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl text-sm font-medium">
+                        <span class="h-2 w-2 bg-blue-500 rounded-full"></span> Liderazgo y trabajo en equipo
+                    </li>
+                    <li class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl text-sm font-medium">
+                        <span class="h-2 w-2 bg-blue-500 rounded-full"></span> Gestión tecnológica y aprendizaje continuo
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="h-12 w-12 bg-amber-100 rounded-2xl flex items-center justify-center text-2xl">⚡</div>
+                    <h2 class="text-2xl font-bold text-slate-800">Competencias Específicas <span class="text-amber-600 block text-sm font-semibold uppercase tracking-wider">Ingeniería Eléctrica</span></h2>
+                </div>
+                <ul class="space-y-3">
+                    <li class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl text-sm font-medium">
+                        <span class="h-2 w-2 bg-amber-500 rounded-full"></span> Administración de recursos financieros
+                    </li>
+                    <li class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl text-sm font-medium">
+                        <span class="h-2 w-2 bg-amber-500 rounded-full"></span> Elaboración de proyectos técnico-económicos
+                    </li>
+                    <li class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl text-sm font-medium">
+                        <span class="h-2 w-2 bg-amber-500 rounded-full"></span> Gestión del Servicio Eléctrico Nacional
+                    </li>
+                    <li class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl text-sm font-medium">
+                        <span class="h-2 w-2 bg-amber-500 rounded-full"></span> Identificación de fallas y soluciones de ingeniería
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: DIMENSIONES DE RELACIÓN (INTRA, INTER, TRANS) -->
+        <section class="bg-slate-900 text-white rounded-[3rem] p-10 mb-16 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-12 opacity-10 text-9xl font-black select-none">RELACIONES</div>
+            <div class="relative z-10">
+                <h2 class="text-3xl font-black mb-4 tracking-tight">Articulación del Conocimiento</h2>
+                <p class="text-slate-400 mb-10 max-w-2xl leading-relaxed">
+                    La unidad curricular no es un elemento aislado; se conecta horizontalmente con sus contenidos, verticalmente con el currículo de ingeniería y transversalmente con los desafíos sociales.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Intradisciplinaria -->
+                    <div class="bg-white/5 border border-white/10 p-6 rounded-2xl hover:bg-white/10 transition-colors">
+                        <h3 class="text-blue-400 font-bold mb-3 uppercase tracking-widest text-xs">Intradisciplinaria</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed mb-4">Secuencia lógica interna de contenidos que permite el escalamiento cognitivo:</p>
+                        <div class="flex flex-col gap-2">
+                            <span class="bg-blue-500/20 text-blue-300 text-[10px] px-3 py-1 rounded-full w-fit">Fundamentos Básicos</span>
+                            <span class="text-slate-500 text-center text-xs">↓</span>
+                            <span class="bg-blue-500/20 text-blue-300 text-[10px] px-3 py-1 rounded-full w-fit">Análisis de Alternativas</span>
+                            <span class="text-slate-500 text-center text-xs">↓</span>
+                            <span class="bg-blue-500/20 text-blue-300 text-[10px] px-3 py-1 rounded-full w-fit">Toma de Decisiones Complejas</span>
+                        </div>
+                    </div>
+
+                    <!-- Interdisciplinaria -->
+                    <div class="bg-white/5 border border-white/10 p-6 rounded-2xl hover:bg-white/10 transition-colors">
+                        <h3 class="text-emerald-400 font-bold mb-3 uppercase tracking-widest text-xs">Interdisciplinaria</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed mb-4">Sinergia con el eje de formación básica y aplicada del Ingeniero Electricista:</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <span class="border border-emerald-500/30 text-emerald-300 text-[10px] px-2 py-1 rounded-md text-center">Cálculo 10-40</span>
+                            <span class="border border-emerald-500/30 text-emerald-300 text-[10px] px-2 py-1 rounded-md text-center">Circuitos</span>
+                            <span class="border border-emerald-500/30 text-emerald-300 text-[10px] px-2 py-1 rounded-md text-center">Potencia</span>
+                            <span class="border border-emerald-500/30 text-emerald-300 text-[10px] px-2 py-1 rounded-md text-center">Contabilidad</span>
+                        </div>
+                    </div>
+
+                    <!-- Transdisciplinaria -->
+                    <div class="bg-white/5 border border-white/10 p-6 rounded-2xl hover:bg-white/10 transition-colors">
+                        <h3 class="text-amber-400 font-bold mb-3 uppercase tracking-widest text-xs">Transdisciplinaria</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed mb-4">Aporte a dimensiones humanas y profesionales fuera de la técnica pura:</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-amber-500/20 text-amber-300 text-[10px] px-3 py-1 rounded-full">Ética Ambiental</span>
+                            <span class="bg-amber-500/20 text-amber-300 text-[10px] px-3 py-1 rounded-full">Sostenibilidad Energética</span>
+                            <span class="bg-amber-500/20 text-amber-300 text-[10px] px-3 py-1 rounded-full">Gestión Social</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: RUTA INTERACTIVA -->
+        <section class="mb-20">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+                <div>
+                    <h2 class="text-3xl font-black text-slate-900 tracking-tight">Cronograma de Transformación</h2>
+                    <p class="text-slate-500 italic">Explora las etapas y consulta los planes de evaluación dinámicos.</p>
+                </div>
+                <div class="bg-blue-50 text-blue-600 px-4 py-2 rounded-2xl text-xs font-bold uppercase tracking-widest border border-blue-100">
+                    Semestre B2026
+                </div>
+            </div>
+
+            <div class="relative">
+                <div class="timeline-connector"></div>
+                <div id="stages-container" class="space-y-12">
+                    <!-- Injected by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 4: ANALÍTICA -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+            <div class="bg-white p-10 rounded-[2.5rem] shadow-xl border border-slate-50">
+                <h3 class="text-2xl font-bold text-slate-800 mb-2">Equilibrio Evaluativo</h3>
+                <p class="text-sm text-slate-500 mb-8">Distribución porcentual del modelo de evaluación continua.</p>
+                <div class="chart-container">
+                    <canvas id="balanceChart"></canvas>
+                </div>
+            </div>
+            <div class="bg-white p-10 rounded-[2.5rem] shadow-xl border border-slate-50">
+                <h3 class="text-2xl font-bold text-slate-800 mb-2">Articulación Curricular</h3>
+                <p class="text-sm text-slate-500 mb-8">Influencia financiera y técnica en el perfil de egreso.</p>
+                <div id="radarArtic" class="w-full h-[350px]"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-950 text-white py-20 px-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
+            <div>
+                <h4 class="text-3xl font-black mb-4 tracking-tighter">Universidad de Los Andes</h4>
+                <p class="text-slate-400 max-w-sm text-sm leading-relaxed mb-6 italic">
+                    Diseño instruccional basado en el modelo PAD ULA para la formación de ingenieros íntegros.
+                </p>
+                <div class="flex gap-4">
+                    <div class="h-12 w-12 bg-blue-600 rounded-xl flex items-center justify-center font-bold">ULA</div>
+                    <div class="h-12 w-12 bg-amber-600 rounded-xl flex items-center justify-center font-bold">PAD</div>
+                </div>
+            </div>
+            <div class="text-right">
+                <span class="text-blue-500 font-bold uppercase tracking-widest text-[10px] mb-2 block">PAD</span>
+                <p class="text-xl font-bold">José Maldonado</p>
+                <p class="text-slate-500 text-sm italic mb-8">Planificación y Evaluación por Competencias</p>
+                <div class="pt-8 border-t border-slate-800 text-[10px] text-slate-600 uppercase tracking-widest font-bold">
+                    No SVG • No Mermaid JS • 100% Canvas Interactivo
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // DATASET EXTRACTED FROM PDF
+        const stagesData = [
+            {
+                title: "Etapa 0: Diagnóstico",
+                subtitle: "Semana 1 - Contexto",
+                teach: "Clase dialogada para presentar problemas del sector eléctrico.",
+                learn: "Mapa conceptual inicial sobre evaluación bajo incertidumbre.",
+                eval: {
+                    diag: "Prueba objetiva de saberes básicos + autoevaluación inicial de expectativas.",
+                    form: "Observación de la participación y calidad de argumentos en la clase dialogada.",
+                    summ: "No aplica en esta fase inicial diagnóstica."
+                }
+            },
+            {
+                title: "Etapa 1: Fundamentos",
+                subtitle: "Temas 1 y 2 - Conceptos básicos, diagramas de flujo de dinero, fórmulas y factores, tasas nominales/efectivas, capitalización continua.",
+                teach: "Modelado de ejercicios de flujo de dinero y factores financieros.",
+                learn: "Resolución de problemas en pareja + diagramación de flujos de caja.",
+                eval: {
+                    diag: "Cuestionario flash sobre conceptos de interés y equivalencia.",
+                    form: "Lista de cotejo de procedimientos + coevaluación de diagramas de flujo.",
+                    summ: "Prueba escrita individual + trabajo grupal de aplicación de fórmulas."
+                }
+            },
+            {
+                title: "Etapa 2: Análisis VP y CA",
+                subtitle: "Tema 3 - Tipos de propuestas, estimación de costos, VP, CA, vidas desiguales, costo capitalizado.",
+                teach: "Aprendizaje Basado en Problemas (ABP) con casos eléctricos reales.",
+                learn: "Simulación de escenarios en Excel para proyectos con vidas desiguales.",
+                eval: {
+                    diag: "Pregunta de activación sobre comparación de equipos con distinta duración.",
+                    form: "Rúbrica de proceso colaborativo + diario de aprendizaje reflexivo.",
+                    summ: "Informe técnico grupal comparativo (VP vs CA) + rúbrica de producto."
+                }
+            },
+            {
+                title: "Etapa 3: Tasa de Retorno y Relación Beneficio - Costo",
+                subtitle: "Tema 4 - Cálculo de TIR, comparación de múltiples propuestas, relación Beneficio-Costo.",
+                teach: "Dinámicas de reflexión crítica sobre la TIR y relación B/C.",
+                learn: "Análisis de casos mutuamente excluyentes y justificación técnica.",
+                eval: {
+                    diag: "Cuestionario corto sobre la interpretación económica de la TIR.",
+                    form: "Coevaluación de soluciones + Escala de valoración de argumentación + autoevaluación del proceso.",
+                    summ: "Prueba escrita de cálculo y selección + defensa oral corta de un caso Beneficio/Costo."
+                }
+            },
+            {
+                title: "Etapa 4: Equilibrio, Sensibilidad y Reemplazo",
+                subtitle: "Tema 5 - Punto de equilibrio, análisis de sensibilidad, análisis de reemplazo",
+                teach: "Dirección de proyectos cortos y prácticas grupales de debate.",
+                learn: "Gráficas de equilibrio y discusión de resultados.",
+                eval: {
+                    diag: "Caso de activación: ¿Cuándo conviene jubilar un transformador eléctrico?",
+                    form: "Lista de cotejo de gráficas + observación de debates en clase + rúbrica formativa",
+                    summ: "Informe técnico de análisis de reemplazo integral + rúbrica de proceso."
+                }
+            },
+            {
+                title: "Etapa 5: Bonos, Depreciación y Aspectos Contables",
+                subtitle: "Temas 6 y 7 - Bonos, métodos de depreciación, balance general, estado de resultados, TMAR",
+                teach: "Método de casos: Integración de conceptos.",
+                learn: "Desarrollo del proyecto integrador (Simulación de flujos y TMAR).",
+                eval: {
+                    diag: "Pregunta diagnóstica sobre depreciación vs flujo de caja real.",
+                    form: "Seguimiento con rúbrica parcial + coevaluación de borradores técnicos.",
+                    summ: "Defensa oral del proyecto integrador + rúbrica holística de competencias."
+                }
+            },
+            {
+                title: "Etapa 6: Consolidación y Metacognición",
+                subtitle: "Última Semana - Elaboración final del portafolio digital con evidencias de todos los Resultados de Aprendizaje",
+                teach: "Entrevista individual de retroalimentación constructiva.",
+                learn: "Consolidación del portafolio digital de evidencias de aprendizaje.",
+                eval: {
+                    diag: "Autoevaluación final de logros frente a las competencias del perfil.",
+                    form: "Coevaluación del portafolio digital.",
+                    summ: "Evaluación del portafolio final + rúbrica de metacognición profunda."
+                }
+            }
+        ];
+
+        // INJECT STAGES
+        const container = document.getElementById('stages-container');
+        stagesData.forEach((s, i) => {
+            const div = document.createElement('div');
+            div.className = "relative pl-12";
+            div.innerHTML = `
+                <div class="absolute left-0 top-0 h-10 w-10 bg-white border-4 border-blue-600 rounded-full z-10 flex items-center justify-center font-bold text-blue-600 node-pulse text-xs">${i}</div>
+                <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 hover:border-blue-200 transition-colors">
+                    <div class="mb-6">
+                        <span class="text-blue-600 font-bold text-[10px] uppercase tracking-widest">${s.subtitle}</span>
+                        <h3 class="text-2xl font-black text-slate-800">${s.title}</h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                        <div class="bg-blue-50/50 p-4 rounded-2xl border border-blue-100">
+                            <h4 class="text-[9px] font-black text-blue-700 uppercase mb-2 tracking-tighter">🏫 Estrategia de Enseñanza</h4>
+                            <p class="text-xs text-slate-700 leading-relaxed font-medium">${s.teach}</p>
+                        </div>
+                        <div class="bg-emerald-50/50 p-4 rounded-2xl border border-emerald-100">
+                            <h4 class="text-[9px] font-black text-emerald-700 uppercase mb-2 tracking-tighter">🧠 Estrategia de Aprendizaje</h4>
+                            <p class="text-xs text-slate-700 leading-relaxed font-medium">${s.learn}</p>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 border-t border-slate-100">
+                        <h4 class="text-[10px] font-black text-slate-400 uppercase mb-4 tracking-tighter text-center">Evaluación</h4>
+                        <div class="flex gap-2 mb-4">
+                            <button onclick="updateEval(${i}, 'diag')" id="btn-${i}-diag" class="eval-btn flex-1 py-2 rounded-xl text-[10px] font-bold uppercase bg-slate-100 text-slate-500 hover:bg-blue-100">Diagnóstica</button>
+                            <button onclick="updateEval(${i}, 'form')" id="btn-${i}-form" class="eval-btn flex-1 py-2 rounded-xl text-[10px] font-bold uppercase bg-slate-100 text-slate-500 hover:bg-emerald-100">Formativa</button>
+                            <button onclick="updateEval(${i}, 'summ')" id="btn-${i}-summ" class="eval-btn flex-1 py-2 rounded-xl text-[10px] font-bold uppercase bg-slate-100 text-slate-500 hover:bg-amber-100">Sumativa</button>
+                        </div>
+                        <div id="eval-box-${i}" class="min-h-[70px] p-4 bg-slate-900 rounded-2xl text-slate-300 text-xs italic flex items-center justify-center text-center leading-relaxed">
+                            Selecciona una categoría de evaluación para ver los detalles.
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+
+        // INTERACTIVITY LOGIC
+        function updateEval(idx, type) {
+            const box = document.getElementById(`eval-box-${idx}`);
+            const data = stagesData[idx].eval[type];
+            const theme = {
+                diag: { bg: 'bg-blue-600', txt: 'text-white' },
+                form: { bg: 'bg-emerald-600', txt: 'text-white' },
+                summ: { bg: 'bg-amber-500', txt: 'text-slate-900' }
+            };
+
+            box.className = `min-h-[70px] p-4 rounded-2xl text-xs font-semibold flex items-center justify-center text-center leading-relaxed shadow-inner ${theme[type].bg} ${theme[type].txt} transition-all duration-300`;
+            box.innerHTML = data;
+
+            // Reset buttons
+            ['diag', 'form', 'summ'].forEach(t => {
+                const b = document.getElementById(`btn-${idx}-${t}`);
+                if (t === type) {
+                    b.className = `eval-btn active flex-1 py-2 rounded-xl text-[10px] font-bold uppercase ${theme[t].bg} ${theme[t].txt}`;
+                } else {
+                    b.className = `eval-btn flex-1 py-2 rounded-xl text-[10px] font-bold uppercase bg-slate-100 text-slate-500`;
+                }
+            });
+        }
+
+        // CHARTS LOGIC
+        const wrap = (labels) => labels.map(l => {
+            if (l.length <= 16) return l;
+            const words = l.split(' ');
+            let res = [], cur = '';
+            words.forEach(w => {
+                if ((cur + w).length > 16) { res.push(cur.trim()); cur = w + ' '; }
+                else { cur += w + ' '; }
+            });
+            res.push(cur.trim());
+            return res;
+        });
+
+        const tooltipCfg = {
+            callbacks: {
+                title: (items) => {
+                    const l = items[0].chart.data.labels[items[0].dataIndex];
+                    return Array.isArray(l) ? l.join(' ') : l;
+                }
+            }
+        };
+
+        // Balance Chart
+        new Chart(document.getElementById('balanceChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Diagnóstica', 'Formativa', 'Sumativa'],
+                datasets: [{
+                    data: [20, 40, 40],
+                    backgroundColor: ['#2563eb', '#10b981', '#f59e0b'],
+                    borderWidth: 0,
+                    hoverOffset: 20
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                cutout: '75%',
+                plugins: {
+                    legend: { position: 'bottom', labels: { usePointStyle: true, font: { weight: 'bold' } } },
+                    tooltip: tooltipCfg
+                }
+            }
+        });
+
+        // Radar Plotly
+        const rData = [{
+            type: 'scatterpolar',
+            r: [90, 85, 70, 95, 80, 90],
+            theta: ['Cálculo 40', 'Circuitos', 'Sistemas Potencia', 'Evaluación Proy', 'Contabilidad', 'Cálculo 40'],
+            fill: 'toself',
+            fillcolor: 'rgba(37, 99, 235, 0.2)',
+            line: { color: '#2563eb', width: 2 },
+            marker: { color: '#1d4ed8', size: 8 }
+        }];
+        const rLayout = {
+            polar: { radialaxis: { visible: true, range: [0, 100], tickfont: { size: 9 } } },
+            margin: { t: 40, b: 40, l: 40, r: 40 },
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            showlegend: false
+        };
+        Plotly.newPlot('radarArtic', rData, rLayout, {responsive: true, displayModeBar: false});
+
+        // Init first stage eval
+        window.onload = () => updateEval(0, 'diag');
+    </script>
+</body>
+</html>
+```eof
